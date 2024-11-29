@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/works.css' %}">
+{% endblock styles %}
+
+{% block title %}Работы{% endblock title %}
+
+{% block content %}
+    <div class="posts">
+        {% for post in posts %}
+        <div class="post">
+            <img src="/media/{{ post.cover_photo }}" alt="post.title">
+            <div>
+                <h2>{{ post.title }}</h2>
+                <p>{{ post.description }}</p>
+                <a href="/posts/{{ post.id }}">Узнать подробнее</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock content %}
+
+{% block scripts %}
+
+{% endblock scripts %}

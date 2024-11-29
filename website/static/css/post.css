@@ -1,0 +1,73 @@
+.line {
+    width: 200px;
+    height: 3px;
+    margin: 20px auto 40px auto;
+    border-bottom: 1px solid white;
+}
+
+.container {
+    width: 500px;
+    display: block;
+    margin: 30px auto;
+}
+
+.before-after-slider {
+    width: 100%;
+    height: 400px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.after-image {
+    display: block;
+    z-index: 1000;
+}
+
+.before-image {
+    position: absolute;
+    height: 100%;
+    width: 50%;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    z-index: 2;
+}
+
+.before-image img, .after-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.resizer {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    z-index: 5;
+    top: 0;
+    left: 50%;
+    height: 100%;
+    width: 4px;
+    background: white;
+    -ms-touch-action: pan-y;
+    touch-action: pan-y;
+    cursor: pointer;
+}
+
+.resizer:after {
+    background: linear-gradient(62deg, #1FAB89 5%, #F6F6F6);
+    content: ' ';
+    font-weight: 900;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    position: absolute;
+    margin: 0 0 0 -17px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 3px solid white;
+}

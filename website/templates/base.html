@@ -1,0 +1,75 @@
+{% load static %}
+
+</html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+        rel="stylesheet">
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=a7f9f1c1-437a-4ce7-9759-ce25c948b420&lang=ru_RU"
+        type="text/javascript"></script>
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    {% block styles %}
+    {% endblock styles %}
+</head>
+
+<body>
+    <header>
+        <a href="/"><img src="{% static 'logo.png' %}" alt=""></a>
+        <nav>
+            <a href="/our_commands/">Наши команды</a>
+            <a href="/works/">Работы</a>
+            <a href="/about_us/">О нас</a>
+            <a href="/profile/">Профиль</a>
+        </nav>
+        <div class="auth">
+            {% if user.is_authenticated %}
+            {% if user.is_superuser %}
+            <a href="/admin/">Админ-панель</a>
+            {% endif %}
+            <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Выход</a>
+
+            <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: none;">
+                {% csrf_token %}
+            </form>
+            {% else %}
+            <a href="{% url 'signup' %}">РЕГИСТРАЦИЯ</a>
+            <a href="{% url 'login' %}">ВХОД</a>
+            {% endif %}
+        </div>
+    </header>
+    <div class="header-line"></div>
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+    <footer>
+        <img src="{% static 'logo.png' %}" alt="Логотип">
+        <article>
+            <h2>
+                Комфортная окружающая среда
+            </h2>
+            <p>
+                Преображение города является основной задачей нашего проекта. Эстетичное окружение влияет на наше
+                настроение. Своим проектом мы хотим показать , что креативность и немного фантазии может радовать глаз
+                каждый день.
+            </p>
+        </article>
+        <div class="footer-line"></div>
+        <nav>
+            <a href="/about_us/">О нас</a>
+            <a href="/our_commands/">Наши команды</a>
+            <a href="/works/">Работы</a>
+            <a href="/profile/">Личный кабинет</a>
+        </nav>
+    </footer>
+    {% block scripts %}
+    {% endblock %}
+</body>
+
+</html>

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static  'css/about.css' %}">
+{% endblock styles %}
+
+{% block title %}О нас{% endblock title %}
+
+{% block content %}
+    <div class="about-us-container">
+        <div class="about-us-info">
+            <h2>Узнайте чуть больше о нас и нашем проекте</h2>
+            <p>Мы, студенты ПТК НовГУ, разрабатываем проект, отражающий проблемы города, такие как загрязненные улицы, разрушенные неопрятные здания и неблагоприятная атмосфера в общественном транспорте. Мы предлагаем идеи по преображению облика Великого Новгорода. Надеемся, что они смогут вас заинтересовать и побудить улучшать свой город, привлекая к этому всё больше и больше людей.</p>
+        </div>
+        <div id="map" class="about-us-map"></div>
+    </div>
+{% endblock content %}
+
+{% block scripts %}
+    <script src="{% static 'js/main.js' %}"></script>
+    <script>
+        ymaps.ready(function() {
+            var myMap = new ymaps.Map("map", {
+                center: [58.541789, 31.264458],
+                zoom: 17
+            });
+
+            var myPlacemark = new ymaps.Placemark([58.541789, 31.264458], {
+                hintContent: 'Мы здесь!',
+                balloonContent: 'Это наш проект'
+            });
+
+            myMap.geoObjects.add(myPlacemark);
+        })
+    </script>
+{% endblock scripts %}
+
+
+
+

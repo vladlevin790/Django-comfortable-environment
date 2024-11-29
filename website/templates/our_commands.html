@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/commands.css' %}">
+{% endblock styles %}
+
+{% block title %}Наши команды{% endblock title %}
+
+{% block content %}
+    {% for command in commands %}
+        <article class="commans_article">
+            <h2>Команда "{{ command.command_name }}"</h2>
+            <div class="slider_command_wrapper">
+                <div class="slider_command_controls">
+                    <button class="slider_button slide_left" data-index="{{ forloop.counter0 }}"><img src="{% static 'next.png' %}" alt=""></button>
+                </div>
+                <div class="slider_command" id="slider_{{ forloop.counter0 }}">
+                    {% for member in command.members.all %}
+                        <div class="person">
+                            <img src="/media/{{ member.photo }}" alt="{{ member.name }}">
+                            <h2>{{ member.name }}</h2>
+                            <p>{{ member.specialization }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </article>
+    {% endfor %}
+{% endblock content %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const slidersState = {};
+
+    function slideLeft(index) {
+        if (slidersState[index]) return;
+        slidersState[index] = true;
+
+        const slider = document.getElementById(`slider_${index}`);
+        const firstChild = slider.firstElementChild;
+
+        const width = firstChild.offsetWidth + 10;
+        slider.style.transition = 'transform .3s ease';
+        slider.style.transform = `translateX(-${width + 20}px)`;
+
+        setTimeout(() => {
+            slider.style.transition = 'none';
+            slider.appendChild(firstChild);
+            slider.style.transform = 'translateX(0)';
+            slidersState[index] = false;
+        }, 300);
+    }
+
+    document.querySelectorAll('.slider_button').forEach(button => {
+        const index = button.getAttribute('data-index');
+        if (!slidersState[index]) slidersState[index] = false;
+
+        button.addEventListener('click', function () {
+            if (button.classList.contains('slide_left')) {
+                slideLeft(index);
+            }
+        });
+    });
+});
+</script>
+{% endblock scripts %}

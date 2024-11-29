@@ -1,0 +1,27 @@
+.about-us-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 92px;
+    gap: 30px;
+}
+
+.about-us-info {
+    display: flex;
+    flex-direction: column;
+    max-width: 570px;
+    gap: 30px;
+}
+
+.about-us-info > h2 {
+    font-size: 40px;
+}
+
+.about-us-info > p {
+    font-size: 20px;
+    color: #746969;
+}
+
+.about-us-map {
+    width: 570px; 
+    height: 428px; 
+}

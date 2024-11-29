@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+{% endblock styles %}
+
+{% block title %}Главная{% endblock title %}
+
+{% block content %}
+
+<div class="promoute">
+    <article>
+        <h2>Делай город лучше с нашими идеями!</h2>
+        <p>На нашем сайте вы найдете множество полезной информации, советов и идей о том, как сделать наш город чище, зеленее и красивее. Присоединяйтесь к нам, чтобы обмениваться идеями, опытом и вносить свой вклад в улучшение нашего города.</p>
+        <a href="/login/">ПРИСОЕДИНИТЬСЯ</a>
+    </article>
+    <img src="{% static 'green_world.png' %}" alt="Зелёный мир">
+</div>
+
+{% if posts|length > 0 %}
+    <div class="slider-container">
+        {% for post in posts %}
+            <div class="post">
+                <div class="container">
+                    <div class="before-after-slider">
+                        <div class="before-image">
+                            <img src="/media/{{ post.photo_before }}" alt="До"/>
+                        </div>
+                        <div class="after-image">
+                            <img src="/media/{{ post.photo_after }}" alt="После"/>
+                        </div>
+                        <div class="resizer"></div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <button class="next-slide"><img src="{% static 'next.png' %}" alt="Следующий слайд"></button>
+        <article class="slider-text">
+            <h2>Наши креативные идеи</h2>
+            <p>Здесь мы представляем вам наши фотографии, которые воплощают идеи и концепции по улучшению визуальной эстетической окружающей среды нашего города.</p>
+            <a href="/works/">УВИДЕТЬ БОЛЬШЕ</a>
+        </article>
+    </div>
+{% endif %}
+
+<div class="team-section">
+    <article>
+        <h2>Наши талантливые специалисты</h2>
+        <p>Познакомьтесь с нашими командами и узнайте о людях, работающих напрямую над достижением наших целей.</p>
+        <a href="/our_commands/">УЗНАТЬ ПОДРОБНЕЕ</a>
+    </article>
+    <img src="{% static 'team.png' %}" alt="Комманды">
+</div>
+
+<section class="about-social-group-section">
+    <h2>Наше сообщество на платформе "ВКонтакте"</h2>
+    <p>Присоединяйтесь к нашей группе уже сегодня и будьте в курсе последних тенденций и идей в области улучшения городской среды. Вместе мы можем сделать наш город красивым и вдохновляющим для всех его жителей.</p>
+    <a href="/login/">ПРИСОЕДИНИТЬСЯ</a>
+</section>
+
+<div class="map-section">
+    <div id="map" class="map"></div>
+    <div id="map-preview-container" class="map-preview-container"></div>
+    <div class="map-section-text-ontent">
+        <h2>Идеи для изменений</h2>
+        <div class="h2-line"></div>
+        <p>На данной карте вы можете ознакомиться с нашими идеями изменений в данных местах.</p>
+    </div>
+</div>
+ 
+<div class="question">
+    <div class="question-info">
+        <h2>Не оставляйте вопросы без ответа</h2>
+        <div class="question-line"></div>
+        <p>Спасибо, что посетили наш сайт! Если у вас остались вопросы, комментарии или предложения, пожалуйста, не стесняйтесь связаться с нами. Наша команда всегда готова помочь и ответить на все ваши запросы. Благодарим вас за обращение!</p>
+    </div>
+    <div class="question-form">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">ОТПРАВИТЬ</button>
+        </form>
+    </div>
+</div>
+
+<script type="application/json" id="posts-data">{{ posts_data|safe }}</script>
+
+{% endblock content %}
+
+{% block scripts %}
+    <script src="{% static 'js/main.js' %}"></script>
+    <script>
+        ymaps.ready(function() {
+            var myMap = new ymaps.Map("map", {
+                center: [58.521475, 31.275475],
+                zoom: 10
+            });
+
+            var posts = JSON.parse(document.getElementById('posts-data').textContent); 
+            var previewContainer = document.getElementById('map-preview-container');
+
+            posts.forEach(function(post) {
+                var myPlacemark = new ymaps.Placemark([post.latitude, post.longitude], {
+                    balloonContent: `
+                        <div class="map-preview-point">
+                            <img src="/media/${post.cover}" alt="Обложка поста" />
+                            <p>${post.title}</p>
+                            <p>${truncateText(post.description, 20)}</p>
+                            <a>Узнать подробнее...</a>
+                        </div>
+                    `
+                });
+
+                myPlacemark.events.add('click', function() {
+                    var previewDiv = document.createElement('div');
+                    previewDiv.className = 'map-preview-point';
+                    previewDiv.innerHTML = `
+                        <img src="/media/${post.cover}" alt="Обложка поста" />
+                        <p>${post.title}</p>
+                        <p>${truncateText(post.description, 20)}</p>
+                        <a href="#">Узнать подробнее...</a>
+                    `;
+                    previewContainer.innerHTML = '';
+                    previewContainer.appendChild(previewDiv);
+                    previewDiv.style.display = 'flex';
+                    previewDiv.style.flexDirection = 'column';
+                    previewDiv.style.justifyContent = 'center';
+                    previewDiv.style.padding = '10px'
+                    previewDiv.style.maxWidth = '225px';
+                    previewDiv.style.gap = '17px'; 
+                });
+
+                myMap.geoObjects.add(myPlacemark);
+            });
+
+            function truncateText(text, maxLength) {
+                if (text.length > maxLength) {
+                    return text.substr(0, maxLength) + '...';
+                }
+                return text;
+            }
+        });
+    </script>
+{% endblock scripts %}
